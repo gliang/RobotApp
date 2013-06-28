@@ -143,11 +143,17 @@ public abstract class MovingObject {
                      return true;
                    }
             } else if (ICON_WIDTH == null && object.ICON_WIDTH != null) {
-              // this is circle, object is square
+              // this is circle(Robot), object is square(Dirt or Recharge Station)
               int xDist = abs((object.xLocation + object.ICON_WIDTH/2) - x);
               int yDist = abs((object.yLocation + object.ICON_HEIGHT/2) - y);
               if ( xDist <= (object.ICON_WIDTH/2 + RADIUS) && yDist <= (object.ICON_HEIGHT/2 + RADIUS)) {
-                return true;
+                if ( object instanceof Dirt) {
+                  // robot 'removes' the dirt
+                  allObjects.remove(object);
+                  return false;
+                } else {
+                  return true;
+                }
               }
             } else if (ICON_WIDTH != null && object.ICON_WIDTH == null) {
               // this is square, object is cicle
@@ -161,6 +167,9 @@ public abstract class MovingObject {
       }
       return false;
         }
+ }
+ void drawOnce(List<MovingObject> allObjects) {
+   // to be overrided 
  }
 }
 

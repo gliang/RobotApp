@@ -4,6 +4,7 @@ import java.util.ArrayList;
 Cat cat;
 RechargeStation rechargeStation;
 Robot robot;
+Dirt dirt;
 
  Maxim maxim;
  AudioPlayer catPlayer;
@@ -18,12 +19,13 @@ void setup() {
   cat = new Cat(catPlayer);
   rechargeStation = new RechargeStation(width/2,height/2);
   robot = new Robot(400, 500);
+  dirt = new Dirt(200, 200);
   background(255);
   allObjects = new ArrayList<MovingObject>();
   allObjects.add(cat);
   allObjects.add(rechargeStation);
   allObjects.add(robot);
-  
+  allObjects.add(dirt);
   
 }
 
@@ -31,12 +33,13 @@ void draw()
 {
   // display the cat
   background(255);
-  cat.drawOnce( allObjects );
-  robot.drawOnce( allObjects );
-//  println("Cat X position: " + cat.getXLoc());
-//  println("Cat Y position: " + cat.getYLoc());
+  //cat.drawOnce( allObjects );
+  //robot.drawOnce( allObjects );
   
-  rechargeStation.drawStation( );
+  //rechargeStation.drawOnce( );
+  for (MovingObject mo: allObjects) {
+    mo.drawOnce(allObjects);
+  }
 }
 
 void mouseReleased()
