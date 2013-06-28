@@ -42,11 +42,13 @@ void draw()
   }
 }
 
-void mouseReleased()
+void mousePressed()
 {
   /**
   float distance = dist(pmouseX, pmouseY, mouseX, mouseY);
   int speed = int(map(distance, 0, 10, 1, 5));
   robot.setSpeed(speed);
   */
+  Dirt dirt = new Dirt(mouseX, mouseY);
+  allObjects.add(dirt);
 }

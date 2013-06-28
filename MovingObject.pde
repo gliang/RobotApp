@@ -128,6 +128,7 @@ public abstract class MovingObject {
         } 
     else {
       for (MovingObject object: allObjects) {
+        // TODO: need to refactor this code when have time :(, very ugly
          if ( object != this ) {
             if ( ICON_WIDTH == null && object.ICON_WIDTH == null ) {
               // this is circle, object is circle
