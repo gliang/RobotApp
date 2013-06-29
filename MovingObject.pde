@@ -20,6 +20,7 @@ public abstract class MovingObject {
  float TURN_COST = 0.00005f;
  float CHARGE_AMOUNT = 0.005f;
  
+ Basement basement;
 
  
  void turn(int degrees) { 
@@ -79,7 +80,7 @@ public abstract class MovingObject {
   int computeRandomDirectionChange() {
     int amount;
     if (random(0, 1) > 0.67) {      //the probabilities of 1/3
-      amount = (int)((Math.random() * 10) % (90 / TURN_UNIT));
+      amount = (int)((random(0, 1) * 10) % (90 / TURN_UNIT));
       if (random(0, 1) > 0.5)
         desiredDirection = direction - TURN_UNIT * amount;
       else
@@ -94,7 +95,7 @@ public abstract class MovingObject {
   }
   
   // Make a Move 
-  void makeMoveIn(List<MovingObject> allObjects) {
+  void makeMoveIn() {
     // Turn the robot in an appropriate direction
     //Point target = findTarget(world);
     turnTowards(computeDesiredDirection());
@@ -102,7 +103,7 @@ public abstract class MovingObject {
     int newX = (int)(xLocation + speed * (cos(direction * 3.14 / 180.0)));
     int newY = (int)(yLocation - speed * (sin(direction * 3.14 / 180.0)));
     
-    if (checkForCollision(newX, newY, allObjects)) {
+    if (checkForCollision(newX, newY)) {
       desiredDirection = direction - 90;
       //reduceBatteryLifeBy(COLLISION_COST); //collision
     } else {
@@ -113,7 +114,7 @@ public abstract class MovingObject {
 
   }
   
-  boolean checkForCollision(int x, int y, List<MovingObject> allObjects) {
+  boolean checkForCollision(int x, int y) {
     int iconWidth = RADIUS;
     int iconHeight = RADIUS;
     int r = RADIUS;
@@ -127,7 +128,7 @@ public abstract class MovingObject {
            return true;
         } 
     else {
-      for (MovingObject object: allObjects) {
+      for (MovingObject object: basement.getAllObjects()) {
         // TODO: need to refactor this code when have time :(, very ugly
          if ( object != this ) {
             if ( ICON_WIDTH == null && object.ICON_WIDTH == null ) {
@@ -150,8 +151,8 @@ public abstract class MovingObject {
               if ( xDist <= (object.ICON_WIDTH/2 + RADIUS) && yDist <= (object.ICON_HEIGHT/2 + RADIUS)) {
                 if ( object instanceof Dirt) {
                   // robot 'removes' the dirt
-                  allObjects.remove(object);
-                  return false;
+                  basement.getToRemoveObjects().add(object);
+                  //return false;
                 } else {
                   return true;
                 }
@@ -169,8 +170,11 @@ public abstract class MovingObject {
       return false;
         }
  }
- void drawOnce(List<MovingObject> allObjects) {
+ void drawOnce() {
    // to be overrided 
+ }
+ void putIn(Basement b) {
+   basement = b;
  }
 }
 

@@ -52,7 +52,7 @@ public class Cat extends MovingObject {
     return yLocation; 
  }
  
- public void drawOnce( List<MovingObject> allObjects) {
+ public void drawOnce() {
    if ( timeCounter > 0 && timeCounter < 250) {
      image(images[(int)currentFrame], xLocation, yLocation);
      currentFrame = currentFrame+1*speedAdjust;
@@ -67,7 +67,7 @@ public class Cat extends MovingObject {
      println("ranNum: " + ranNum);
      // the cat will randomly stop
      if (ranNum >= CAT_STOP) {
-       makeMoveIn(allObjects);
+       makeMoveIn();
        image(icon, xLocation, yLocation);
      } else {
        timeCounter = 1;

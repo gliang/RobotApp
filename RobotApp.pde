@@ -1,31 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
 
-Cat cat;
-RechargeStation rechargeStation;
-Robot robot;
-Dirt dirt;
 
- Maxim maxim;
- AudioPlayer catPlayer;
-
-List<MovingObject> allObjects;
+Maxim maxim;
+Basement basement;
 
 void setup() {
   size(600, 600);
   maxim = new Maxim(this);
-  catPlayer = maxim.loadFile("sound/cat.wav");
-  
-  cat = new Cat(catPlayer);
-  rechargeStation = new RechargeStation(width/2,height/2);
-  robot = new Robot(400, 500);
-  dirt = new Dirt(200, 200);
-  background(255);
-  allObjects = new ArrayList<MovingObject>();
-  allObjects.add(cat);
-  allObjects.add(rechargeStation);
-  allObjects.add(robot);
-  allObjects.add(dirt);
+  basement = new Basement(maxim);
   
 }
 
@@ -37,8 +20,10 @@ void draw()
   //robot.drawOnce( allObjects );
   
   //rechargeStation.drawOnce( );
-  for (MovingObject mo: allObjects) {
-    mo.drawOnce(allObjects);
+  basement.toRemoveDirt();
+  basement.toAddDirt();
+  for (MovingObject mo: basement.getAllObjects()) {
+    mo.drawOnce();
   }
 }
 
@@ -50,5 +35,6 @@ void mousePressed()
   robot.setSpeed(speed);
   */
   Dirt dirt = new Dirt(mouseX, mouseY);
-  allObjects.add(dirt);
+  basement.getToAddObjects().add(dirt);
+  
 }

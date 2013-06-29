@@ -18,7 +18,7 @@ class Robot extends MovingObject {
   recharging = false;
   needFlash = false;
   RADIUS = 13;
-  TURN_UNIT = 10;
+  TURN_UNIT = 5;
  }
  
  @Override
@@ -58,8 +58,8 @@ class Robot extends MovingObject {
       return false;
   }
   
-  public void drawOnce( List<MovingObject> allObjects ) {
-    makeMoveIn(allObjects);
+  public void drawOnce( ) {
+    makeMoveIn();
     //CYAN
     color inside = color(0,255,255);
     // BLACK

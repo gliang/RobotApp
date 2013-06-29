@@ -32,7 +32,7 @@ public class RechargeStation extends MovingObject {
     
   }
   
-  public void drawOnce(List<MovingObject> allObjects) {
+  public void drawOnce() {
     //LIGHT_GRAY
     color inside = color(100, 100, 100);
     // BLACK
