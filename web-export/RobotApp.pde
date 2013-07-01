@@ -1,31 +1,14 @@
 import java.util.List;
 import java.util.ArrayList;
 
-Cat cat;
-RechargeStation rechargeStation;
-Robot robot;
-Dirt dirt;
 
- Maxim maxim;
- AudioPlayer catPlayer;
-
-List<MovingObject> allObjects;
+Maxim maxim;
+Basement basement;
 
 void setup() {
   size(600, 600);
   maxim = new Maxim(this);
-  catPlayer = maxim.loadFile("sound/cat.wav");
-  
-  cat = new Cat(catPlayer);
-  rechargeStation = new RechargeStation(width/2,height/2);
-  robot = new Robot(400, 500);
-  dirt = new Dirt(200, 200);
-  background(255);
-  allObjects = new ArrayList<MovingObject>();
-  allObjects.add(cat);
-  allObjects.add(rechargeStation);
-  allObjects.add(robot);
-  allObjects.add(dirt);
+  basement = new Basement(maxim);
   
 }
 
@@ -37,18 +20,114 @@ void draw()
   //robot.drawOnce( allObjects );
   
   //rechargeStation.drawOnce( );
-  for (MovingObject mo: allObjects) {
-    mo.drawOnce(allObjects);
+  basement.toRemoveDirt();
+  basement.toAddDirt();
+  for (MovingObject mo: basement.getAllObjects()) {
+    mo.drawOnce();
   }
 }
 
-void mouseReleased()
+void mousePressed()
 {
   /**
   float distance = dist(pmouseX, pmouseY, mouseX, mouseY);
   int speed = int(map(distance, 0, 10, 1, 5));
   robot.setSpeed(speed);
   */
+  Dirt dirt = new Dirt(mouseX, mouseY);
+  basement.getToAddObjects().add(dirt);
+  
+}
+
+
+public class Basement {
+  
+ Cat cat;
+ RechargeStation rechargeStation;
+ Robot robot;
+ Dirt dirt;
+
+ Maxim maxim;
+ AudioPlayer catPlayer;
+ AudioPlayer backgroundPlayer;
+ 
+ List<MovingObject> allObjects;
+ List<MovingObject> toRemoveObjects;
+ List<MovingObject> toAddObjects;
+ 
+ // TODO: Should implement an Interface, so that moving objects can be put in different place :)
+ public Basement(Maxim m) {
+   
+   maxim = m;
+   catPlayer = maxim.loadFile("sound/cat.wav");
+   backgroundPlayer = maxim.loadFile("sound/eduta.mp3");
+   backgroundPlayer.setLooping(true);
+   backgroundPlayer.volume(1.0);
+   backgroundPlayer.play();
+  
+   cat = new Cat(catPlayer);
+   cat.putIn(this);
+   rechargeStation = new RechargeStation(300,300);
+   rechargeStation.putIn(this);
+   robot = new Robot(400, 500);
+   robot.putIn(this);
+   dirt = new Dirt(200, 200);
+   dirt.putIn(this);
+   
+   allObjects = new ArrayList<MovingObject>();
+   toRemoveObjects = new ArrayList<MovingObject>();
+   toAddObjects = new ArrayList<MovingObject>();
+   
+   allObjects.add(cat);
+   allObjects.add(rechargeStation);
+   allObjects.add(robot);
+   allObjects.add(dirt);
+  
+   Dirt dirt2 = new Dirt(100, 200);
+   dirt2.putIn(this);
+   Dirt dirt3 = new Dirt(50, 100);
+   dirt3.putIn(this);
+   Dirt dirt4 = new Dirt(400, 300);
+   dirt4.putIn(this);
+   Dirt dirt5 = new Dirt(500, 400);
+   dirt5.putIn(this);
+  
+   allObjects.add(dirt2);
+   allObjects.add(dirt3);
+   allObjects.add(dirt4);
+   allObjects.add(dirt5);
+ }
+ 
+ public List<MovingObject> getAllObjects() {
+   return allObjects; 
+ }
+ 
+ public void setAllObjects(List<MovingObject> objects) {
+    allObjects = objects;
+ }
+ 
+ public List<MovingObject> getToRemoveObjects() {
+   return toRemoveObjects; 
+ }
+ 
+ public List<MovingObject> getToAddObjects() {
+   return toAddObjects;
+ }
+ 
+ public void toRemoveDirt() {
+   if ( allObjects != null ) {
+     allObjects.removeAll(toRemoveObjects);
+     toRemoveObjects = new ArrayList<MovingObject>();
+   }
+ }
+ 
+ public void toAddDirt() {
+   if ( allObjects != null ) {
+     allObjects.addAll(toAddObjects);
+     toAddObjects = new ArrayList<MovingObject>();
+   }
+ }
+  
 }
 
 
@@ -89,7 +168,7 @@ public class Cat extends MovingObject {
    
    player = p;
    player.setLooping(false);
-   player.volume(0.25);
+   player.volume(1.0);
  }
  
  void draw() {
@@ -104,7 +183,7 @@ public class Cat extends MovingObject {
     return yLocation; 
  }
  
- public void drawOnce( List<MovingObject> allObjects) {
+ public void drawOnce() {
    if ( timeCounter > 0 && timeCounter < 250) {
      image(images[(int)currentFrame], xLocation, yLocation);
      currentFrame = currentFrame+1*speedAdjust;
@@ -119,7 +198,7 @@ public class Cat extends MovingObject {
      println("ranNum: " + ranNum);
      // the cat will randomly stop
      if (ranNum >= CAT_STOP) {
-       makeMoveIn(allObjects);
+       makeMoveIn();
        image(icon, xLocation, yLocation);
      } else {
        timeCounter = 1;
@@ -140,7 +219,7 @@ public class Dirt extends MovingObject {
     speed = 0;
   }
   
-  public void drawOnce(List<MovingObject> allObjects) {
+  public void drawOnce() {
 //    //LIGHT_GRAY
 //    color inside = color(100, 100, 100);
     // BLACK
@@ -2413,6 +2492,7 @@ public abstract class MovingObject {
  float TURN_COST = 0.00005f;
  float CHARGE_AMOUNT = 0.005f;
  
+ Basement basement;
 
  
  void turn(int degrees) { 
@@ -2472,7 +2552,7 @@ public abstract class MovingObject {
   int computeRandomDirectionChange() {
     int amount;
     if (random(0, 1) > 0.67) {      //the probabilities of 1/3
-      amount = (int)((Math.random() * 10) % (90 / TURN_UNIT));
+      amount = (int)((random(0, 1) * 10) % (90 / TURN_UNIT));
       if (random(0, 1) > 0.5)
         desiredDirection = direction - TURN_UNIT * amount;
       else
@@ -2487,7 +2567,7 @@ public abstract class MovingObject {
   }
   
   // Make a Move 
-  void makeMoveIn(List<MovingObject> allObjects) {
+  void makeMoveIn() {
     // Turn the robot in an appropriate direction
     //Point target = findTarget(world);
     turnTowards(computeDesiredDirection());
@@ -2495,7 +2575,7 @@ public abstract class MovingObject {
     int newX = (int)(xLocation + speed * (cos(direction * 3.14 / 180.0)));
     int newY = (int)(yLocation - speed * (sin(direction * 3.14 / 180.0)));
     
-    if (checkForCollision(newX, newY, allObjects)) {
+    if (checkForCollision(newX, newY)) {
       desiredDirection = direction - 90;
       //reduceBatteryLifeBy(COLLISION_COST); //collision
     } else {
@@ -2506,7 +2586,7 @@ public abstract class MovingObject {
 
   }
   
-  boolean checkForCollision(int x, int y, List<MovingObject> allObjects) {
+  boolean checkForCollision(int x, int y) {
     int iconWidth = RADIUS;
     int iconHeight = RADIUS;
     int r = RADIUS;
@@ -2520,7 +2600,8 @@ public abstract class MovingObject {
            return true;
         } 
     else {
-      for (MovingObject object: allObjects) {
+      for (MovingObject object: basement.getAllObjects()) {
+        // TODO: need to refactor this code when have time :(, very ugly
          if ( object != this ) {
             if ( ICON_WIDTH == null && object.ICON_WIDTH == null ) {
               // this is circle, object is circle
@@ -2542,8 +2623,8 @@ public abstract class MovingObject {
               if ( xDist <= (object.ICON_WIDTH/2 + RADIUS) && yDist <= (object.ICON_HEIGHT/2 + RADIUS)) {
                 if ( object instanceof Dirt) {
                   // robot 'removes' the dirt
-                  allObjects.remove(object);
-                  return false;
+                  basement.getToRemoveObjects().add(object);
+                  //return false;
                 } else {
                   return true;
                 }
@@ -2561,8 +2642,11 @@ public abstract class MovingObject {
       return false;
         }
  }
- void drawOnce(List<MovingObject> allObjects) {
+ void drawOnce() {
    // to be overrided 
+ }
+ void putIn(Basement b) {
+   basement = b;
  }
 }
 
@@ -2601,7 +2685,7 @@ public class RechargeStation extends MovingObject {
     
   }
   
-  public void drawOnce(List<MovingObject> allObjects) {
+  public void drawOnce() {
     //LIGHT_GRAY
     color inside = color(100, 100, 100);
     // BLACK
@@ -2638,7 +2722,7 @@ class Robot extends MovingObject {
   recharging = false;
   needFlash = false;
   RADIUS = 13;
-  TURN_UNIT = 10;
+  TURN_UNIT = 5;
  }
  
  @Override
@@ -2678,8 +2762,8 @@ class Robot extends MovingObject {
       return false;
   }
   
-  public void drawOnce( List<MovingObject> allObjects ) {
-    makeMoveIn(allObjects);
+  public void drawOnce( ) {
+    makeMoveIn();
     //CYAN
     color inside = color(0,255,255);
     // BLACK
