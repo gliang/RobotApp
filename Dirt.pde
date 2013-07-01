@@ -11,11 +11,9 @@ public class Dirt extends MovingObject {
   }
   
   public void drawOnce() {
-//    //LIGHT_GRAY
-//    color inside = color(100, 100, 100);
+
     // BLACK
     color outside = color(0, 0, 0);
-    //stroke(outside);
     fill(outside);
     rect(xLocation, yLocation, ICON_WIDTH, ICON_HEIGHT);
   }

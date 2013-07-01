@@ -16,12 +16,9 @@ void draw()
 {
   // display the cat
   background(255);
-  //cat.drawOnce( allObjects );
-  //robot.drawOnce( allObjects );
-  
-  //rechargeStation.drawOnce( );
   basement.toRemoveDirt();
   basement.toAddDirt();
+
   for (MovingObject mo: basement.getAllObjects()) {
     mo.drawOnce();
   }
@@ -29,12 +26,8 @@ void draw()
 
 void mousePressed()
 {
-  /**
-  float distance = dist(pmouseX, pmouseY, mouseX, mouseY);
-  int speed = int(map(distance, 0, 10, 1, 5));
-  robot.setSpeed(speed);
-  */
   Dirt dirt = new Dirt(mouseX, mouseY);
+  dirt.putIn(basement);
   basement.getToAddObjects().add(dirt);
   
 }

@@ -3,8 +3,6 @@
 public class Cat extends MovingObject {
  PImage icon;
  PImage [] images;
-// private final int IMAGE_WIDTH = 58;
-// private final int IMAGE_HEIGHT = 75;
  private final int CAT_STOP = 5;
  
  private float currentFrame;

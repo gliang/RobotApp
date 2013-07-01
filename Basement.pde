@@ -9,7 +9,7 @@ public class Basement {
 
  Maxim maxim;
  AudioPlayer catPlayer;
-// AudioPlayer backgroundPlayer;
+ AudioPlayer backgroundPlayer;
  
  List<MovingObject> allObjects;
  List<MovingObject> toRemoveObjects;
@@ -20,10 +20,10 @@ public class Basement {
    
    maxim = m;
    catPlayer = maxim.loadFile("sound/cat.wav");
-//   backgroundPlayer = maxim.loadFile("sound/eduta.mp3");
-//   backgroundPlayer.setLooping(true);
-//   backgroundPlayer.volume(1.0);
-//   backgroundPlayer.play();
+   backgroundPlayer = maxim.loadFile("sound/FreedomDance.wav");
+   backgroundPlayer.setLooping(true);
+   backgroundPlayer.volume(0.8);
+   backgroundPlayer.play();
   
    cat = new Cat(catPlayer);
    cat.putIn(this);
@@ -83,7 +83,12 @@ public class Basement {
  
  public void toAddDirt() {
    if ( allObjects != null ) {
-     allObjects.addAll(toAddObjects);
+     // make sure new dirt cannot be added to existing moving objects
+     for (MovingObject mo: toAddObjects) {
+        if ( !mo.checkForCollision(mo.xLocation, mo.yLocation)) {
+           allObjects.add(mo);
+        } 
+     }
      toAddObjects = new ArrayList<MovingObject>();
    }
  }
