@@ -9,6 +9,7 @@ public class Basement {
 
  Maxim maxim;
  AudioPlayer catPlayer;
+// AudioPlayer backgroundPlayer;
  
  List<MovingObject> allObjects;
  List<MovingObject> toRemoveObjects;
@@ -19,6 +20,10 @@ public class Basement {
    
    maxim = m;
    catPlayer = maxim.loadFile("sound/cat.wav");
+//   backgroundPlayer = maxim.loadFile("sound/eduta.mp3");
+//   backgroundPlayer.setLooping(true);
+//   backgroundPlayer.volume(1.0);
+//   backgroundPlayer.play();
   
    cat = new Cat(catPlayer);
    cat.putIn(this);

@@ -37,7 +37,7 @@ public class Cat extends MovingObject {
    
    player = p;
    player.setLooping(false);
-   player.volume(0.25);
+   player.volume(1.0);
  }
  
  void draw() {
