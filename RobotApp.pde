@@ -29,5 +29,13 @@ void mousePressed()
   Dirt dirt = new Dirt(mouseX, mouseY);
   dirt.putIn(basement);
   basement.getToAddObjects().add(dirt);
-  
+  basement.pickupRobot(mouseX, mouseY);
+}
+
+void mouseDragged() {
+  basement.dragRobot(mouseX, mouseY);
+}
+
+void mouseReleased() {
+  basement.putDownRobot(mouseX, mouseY);
 }

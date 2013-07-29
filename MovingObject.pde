@@ -5,11 +5,11 @@ public abstract class MovingObject {
  int SQUARE_OF_RADIUS = RADIUS * RADIUS;
  Integer ICON_WIDTH;
  Integer ICON_HEIGHT;
- int TURN_UNIT = 15;
+ int TURN_UNIT = 90;
  int CW = -1;
  int CCW = 1;
  
- int speed;
+ float speed;
  int xLocation;
  int yLocation;
  int direction;
@@ -153,7 +153,7 @@ public abstract class MovingObject {
                   // robot 'removes' the dirt
                   basement.getToRemoveObjects().add(object);
                   //return false;
-                } else {
+                } else if ( object instanceof Cat)  {
                   return true;
                 }
               }

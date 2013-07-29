@@ -27,7 +27,7 @@ public class Cat extends MovingObject {
    images = loadImages("images/cat/cat", ".png", 5);
    currentFrame = 0;
    speedAdjust=0.02;
-   TURN_UNIT = 10;
+   TURN_UNIT = 15;
    
    timeCounter = 0;
    ICON_WIDTH = 58;
@@ -62,7 +62,7 @@ public class Cat extends MovingObject {
    } else {
      timeCounter = 0;
      int ranNum = int(map(random(10), 0, 10, 0, 1000));
-     println("ranNum: " + ranNum);
+     //println("ranNum: " + ranNum);
      // the cat will randomly stop
      if (ranNum >= CAT_STOP) {
        makeMoveIn();

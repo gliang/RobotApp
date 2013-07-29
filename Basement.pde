@@ -92,5 +92,29 @@ public class Basement {
      toAddObjects = new ArrayList<MovingObject>();
    }
  }
+ 
+ public void pickupRobot(int x, int y) {
+    if (robot.robotAt(x, y) && robot.hasDeadBattery() ) {
+         robot.pickUp();
+    } 
+ }
+ 
+ public void dragRobot(int x, int y) {
+   if ( robot.isPicked() ) {
+     robot.beingDrag(x,y);
+   }
+ }
+ 
+ public void putDownRobot(int x, int y) {
+   if (robot.isPicked() ) {
+     robot.putDown();
+      int xDist = abs((rechargeStation.xLocation + rechargeStation.ICON_WIDTH/2) - x);
+      int yDist = abs((rechargeStation.yLocation + rechargeStation.ICON_HEIGHT/2) - y);
+      if ( xDist <= (rechargeStation.ICON_WIDTH/2 + RADIUS) && yDist <= (rechargeStation.ICON_HEIGHT/2 + RADIUS)) {
+        robot.setRecharging(true);
+        robot.rechargeBattery();
+      }
+   }
+ }
   
 }
